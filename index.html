@@ -4,10 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>Komodo Talks: Vagrant 101</title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="description" content="A brief talk about the basics of Vagrant">
+		<meta name="author" content="James Gauld">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -71,10 +71,10 @@
 					<h2>What is Vagrant?</h2>
                     <div class="common">
                         <p>
-                            Vagrant is a command line interface (CLI) for creating and managing virtual machines.
+                            Vagrant is a cross-platform (Win, OSX, Linux) command line interface (CLI) for creating and managing virtual machines.
                         </p>
                         <p>
-                            Vagrant can be manage VMs locally via VirtualBox or VMWare, or remotely via several hosting providers (eg. Rackspace Cloud).
+                            Vagrant can manage VMs locally via VirtualBox or VMWare, or remotely via several hosting providers (eg. Rackspace Cloud).
                         </p>
 						<p>
 							It gives us the vital ability to create and configure virtual machines in a consistent manner.
@@ -90,10 +90,13 @@
 					<h2>How do we use Vagrant at Komodo?</h2>
                     <div class="common">
     					<p>
-    					   We primarily use Vagrant (with VirtualBox) to create and configure specific virtual server environments for each project. This allows us to install only those dependencies (and specific versions of those dependencies) required for this project.
+    					   We primarily use Vagrant (with VirtualBox) to create and configure development environments for each project.
+                        </p>
+                        <p>
+                            Having project-specific VMs allows us to install only those dependencies (and specific versions of those dependencies) required for a project.
     					</p>
                         <p>
-                            These virtual environments mirror the live, production environments for those projects.
+                            These virtual environments mirror the live, production environments for each project.
                         </p>
                         <p>
                             We run our applications and tests locally within these virtual environments during development.
@@ -106,20 +109,22 @@
 					<h2>Getting setup with Vagrant and VirtualBox</h2>
                     <div class="common">
                         <ul>
-                            <li>Install VirtualBox</li>
-                            <li>Install Vagrant</li>
+                            <li>Install VirtualBox (<a href="https://www.virtualbox.org/">virtualbox.org</a>)</li>
+                            <li>Install Vagrant (<a href="http://www.vagrantup.com/">vagrantup.com</a>)</li>
                             <li>
-                                Setup a project:
-                                <pre>$ vagrant init</pre>
+                                Setup Vagrant for a new project:
+                                <pre>$ cd /path/to/my/app
+$ vagrant init</pre>
                             </li>
-                            <li>Edit the <code>VagrantFile</code> ...</li>
+                            <li>Edit the resulting <code>VagrantFile</code> ...</li>
                             <li>
-                                Load up the virtual machine:
+                                Load up the virtual machine (headless):
                                 <pre>$ vagrant up</pre>
                             </li>
                             <li>
-                                SSH into the machine (a public )
+                                SSH into the machine as needed:
                                 <pre>$ ssh vagrant@192.68.50.100</pre>
+                                <small>(A keypair is automatically created for the <code>vagrant</code> user and made available to all VMs created through Vagrant)</small>
                             </li>
                         </ul>
                     </div>
@@ -134,10 +139,10 @@
         						The <code>VagrantFile</code> is a simple Ruby script that describes how our virtual machine(s) are to be configured.
         					</p>
                             <p>
-                                It is a small text file that is bundled within the project's Mercurial repostory so that other devs can easily spin up an identical virtual environment on their local machine.
+                                You can configure multiple virtual machines within the same <code>VagrantFile</code>. This is useful for applications that make use of a cluster of different servers.
                             </p>
                             <p>
-                                You can configure multiple virtual machines within the same <code>VagrantFile</code>. This is useful for applications that make use of a cluster of different servers.
+                                We bundle this file with the project's Mercurial repostory so that others in the team can easily spin up an identical virtual environment on their local machine.
                             </p>
                         </div>
                     </section>
@@ -148,7 +153,7 @@
                             <ul>
                                 <li>The flavour of OS to install</li>
                                 <li>The IP address of the VM</li>
-                                <li>Specify a provisioning script</li>
+                                <li>Specify a provisioning script or manifest</li>
                                 <li>A shared folder between your host machine and the virtual machine</li>
                             </ul>
                         </div>
@@ -227,6 +232,8 @@ mysql -uroot -proot mydb &lt; /vagrant/db-schema.sql</span></pre>
                             </p>
                             <pre>$ cd /path/to/my/app
 $ vagrant up</pre>
+                            <p>And we can load up our app in a browser:</p>
+                            <pre>http://192.168.50.100/</pre>
                         </div>
                     </section>
                 </section>
@@ -270,6 +277,7 @@ $ vagrant up</pre>
                     </section>
                 </section>
 
+                <!-- Recap -->
                 <section>
                     <h2>Recap</h2>
                     <div class="common">

@@ -1,0 +1,7 @@
+.reveal section > div.common {
+    text-align: left;
+}
+
+.reveal section > div.common > p {
+    margin-bottom: 40px;
+}

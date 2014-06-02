@@ -46,7 +46,7 @@
                 <!-- Intro -->
 				<section>
 					<h1>Vagrant 101</h1>
-					<h3>For newcomers to Vagrant</h3>
+					<h3>A very brief introduction</h3>
 				</section>
 
                 <!-- TOC -->
@@ -55,15 +55,11 @@
                     <ol>
                         <li>What is Vagrant?</li>
                         <li class="fragment">How do we use Vagrant at Komodo?</li>
-                        <li class="fragment">Getting setup with Vagrant and VirtualBox</li>
+                        <li class="fragment">A simple Vagrant setup</li>
                         <li class="fragment">The <code>VagrantFile</code></li>
-                        <li class="fragment">Provisioning</li>
+                        <li class="fragment">Automating VM provisioning</li>
                         <li class="fragment">Some common commands</li>
                     </ol>
-
-					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-					</aside>
 				</section>
 
 				<!-- What is Vagrant -->
@@ -71,16 +67,16 @@
 					<h2>What is Vagrant?</h2>
                     <div class="common">
                         <p>
-                            Vagrant is a cross-platform (Win, OSX, Linux) command line interface (CLI) for creating and managing virtual machines.
+                            Vagrant is a cross-platform (WinNT, OSX, Linux) command line interface (CLI) for creating and managing virtual machines.
                         </p>
-                        <p>
-                            Vagrant can manage VMs locally via VirtualBox or VMWare, or remotely via several hosting providers (eg. Rackspace Cloud).
+                        <p class="fragment">
+                            Vagrant can manage VMs locally via VirtualBox or VMWare, or remotely via several "providers" (eg. Rackspace Cloud, AWS).
                         </p>
-						<p>
+						<p class="fragment">
 							It gives us the vital ability to create and configure virtual machines in a consistent manner.
 						</p>
-                        <p>
-                            It is perfect for sharing server environments amongst the team, so Joe can be sure he is running the app on exactly the same environment as Felicity.
+                        <p class="fragment">
+                            It is perfect for sharing server environments amongst the team, so Joe can be sure he is running the app in exactly the same environment as Felicity.
                         </p>
                     </div>
 				</section>
@@ -90,15 +86,15 @@
 					<h2>How do we use Vagrant at Komodo?</h2>
                     <div class="common">
     					<p>
-    					   We primarily use Vagrant (with VirtualBox) to create and configure development environments for each project.
+    					   We primarily use Vagrant (with VirtualBox) to create and configure individual development environments for each project.
                         </p>
-                        <p>
+                        <p class="fragment">
                             Having project-specific VMs allows us to install only those dependencies (and specific versions of those dependencies) required for a project.
     					</p>
-                        <p>
-                            These virtual environments mirror the live, production environments for each project.
+                        <p class="fragment">
+                            These virtual environments mirror the live, production environments for each project as closely as possible.
                         </p>
-                        <p>
+                        <p class="fragment">
                             We run our applications and tests locally within these virtual environments during development.
                         </p>
                     </div>
@@ -106,22 +102,22 @@
 
                 <!-- Getting setup with Vagrant and VirtualBox -->
 				<section>
-					<h2>Getting setup with Vagrant and VirtualBox</h2>
+					<h2>A Simple Vagrant Setup</h2>
                     <div class="common">
                         <ul>
                             <li>Install VirtualBox (<a href="https://www.virtualbox.org/">virtualbox.org</a>)</li>
                             <li>Install Vagrant (<a href="http://www.vagrantup.com/">vagrantup.com</a>)</li>
-                            <li>
+                            <li class="fragment">
                                 Setup Vagrant for a new project:
                                 <pre>$ cd /path/to/my/app
 $ vagrant init</pre>
                             </li>
-                            <li>Edit the resulting <code>VagrantFile</code> ...</li>
-                            <li>
+                            <li class="fragment">Edit the resulting <code>VagrantFile</code> (more on this later ...)</li>
+                            <li class="fragment">
                                 Load up the virtual machine (headless):
                                 <pre>$ vagrant up</pre>
                             </li>
-                            <li>
+                            <li class="fragment">
                                 SSH into the machine as needed:
                                 <pre>$ ssh vagrant@192.68.50.100</pre>
                                 <small>(A keypair is automatically created for the <code>vagrant</code> user and made available to all VMs created through Vagrant)</small>
@@ -136,12 +132,12 @@ $ vagrant init</pre>
     					<h2>The <code>VagrantFile</code></h2>
                         <div class="common">
         					<p>
-        						The <code>VagrantFile</code> is a simple Ruby script that describes how our virtual machine(s) are to be configured.
+        						The <code>VagrantFile</code> is a simple Ruby script that tells Vagrant how to configure our virtual machine(s).
         					</p>
-                            <p>
-                                You can configure multiple virtual machines within the same <code>VagrantFile</code>. This is useful for applications that make use of a cluster of different servers.
+                            <p class="fragment">
+                                You can configure several virtual machines within the same <code>VagrantFile</code>. This is useful for applications that make use of a cluster of different servers.
                             </p>
-                            <p>
+                            <p class="fragment">
                                 We bundle this file with the project's Mercurial repostory so that others in the team can easily spin up an identical virtual environment on their local machine.
                             </p>
                         </div>
@@ -151,10 +147,10 @@ $ vagrant init</pre>
                         <h2>Things you can configure in <code>VagrantFile</code></h2>
                         <div class="common">
                             <ul>
-                                <li>The flavour of OS to install</li>
+                                <li>The flavour of OS to install (find bare bones boxes at <a href="https://vagrantcloud.com/">vagrantcloud.com/</a> or <a href="http://www.vagrantbox.es/">vagrantbox.es/</a>)</li>
                                 <li>The IP address of the VM</li>
-                                <li>Specify a provisioning script or manifest</li>
                                 <li>A shared folder between your host machine and the virtual machine</li>
+                                <li>A provisioning script or manifest files</li>
                             </ul>
                         </div>
                     </section>
@@ -172,14 +168,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |c|
     <span class="fragment"># A hostname for this machine
     c.vm.hostname = "my-vagrant-box"</span>
 
-    <span class="fragment"># A provisioning shell script (run once)
-    c.vm.provision :shell, :path => "provision.sh"</span>
-
     <span class="fragment"># A local IP
+    # The host machine will be known by 192.168.50.1
     c.vm.network "private_network", ip: "192.168.50.20"</span>
 
     <span class="fragment"># Setup shared folder (needed for OSX)
     c.vm.synced_folder "./", "/vagrant", id: "vagrant-root", owner: "vagrant", group: "www-data", mount_options: ["dmode=775", "fmode=664"]</span>
+
+    <span class="fragment"># A provisioning shell script (run once; more on this later)
+    c.vm.provision :shell, :path => "provision.sh"</span>
 end</pre>
                         </div>
                     </section>
@@ -193,11 +190,11 @@ end</pre>
                             <p>
                                 Provisioning is the term used to describe the initial, one-time setup of the virtual machine. This may include the installation of dependant software packages, creation of required project directories, configration of service daemons, etc.
                             </p>
-                            <p>
-                                Vagrant supports a few ways to provision machines, such as Puppet, Chef (both cross platform) and simple a shell script.
+                            <p class="fragment">
+                                Vagrant supports a few ways to provision machines, such as Ansible, Puppet and Chef (all cross platform) or a simple a shell script.
                             </p>
-                            <p>
-                                Here's an example of the <code>provision.sh</code> script we defined in our example <code>VagrantFile</code> ...
+                            <p class="fragment">
+                                Here's an example of the <code>provision.sh</code> shell script that we earlier defined in our example <code>VagrantFile</code> ...
                             </p>
                         </div>
                     </section>
@@ -206,12 +203,13 @@ end</pre>
                         <h2>Example provisioning shell script</h2>
                         <div class="common">
                             <pre># Install some packages
-sudo -i
+# Note that the script runs as root by default
 apt-get update
 apt-get install nginx mysql nodejs
 
 <span class="fragment"># Create some logging directories
 mkdir /var/logs/mylogs/error.log
+chown root:www-data /var/logs/mylogs/error.log
 chmod 0644 /var/logs/mylogs/error.log</span>
 
 <span class="fragment"># Copy my upstart script from shared folder to OS directory
@@ -221,18 +219,23 @@ start my-daemon-upstart</span>
 <span class="fragment"># Setup DB
 echo "create database mydb" | mysql -uroot -proot
 mysql -uroot -proot -e "grant all privileges on *.* to root@'%' identified by 'root'";
-mysql -uroot -proot mydb &lt; /vagrant/db-schema.sql</span></pre>
+mysql -uroot -proot mydb &lt; /vagrant/db-schema.sql</span>
+
+<span class="fragment"># Symlink website docroot to our shared folder
+ln -s /var/www /vagrant/public_html
+</span></pre>
                         </div>
                     </section>
                     <section>
                         <h2>Vagrant up!</h2>
                         <div class="common">
                             <p>
-                                Now we're start the virtual machine with a simple:
+                                Now we'll start the virtual machine:
                             </p>
                             <pre>$ cd /path/to/my/app
 $ vagrant up</pre>
-                            <p>And we can load up our app in a browser:</p>
+                            <p><small>(It'll take a few minutes the first time, but thereafter it'll be snappier)</small></p>
+                            <p>And we can load our app into a browser:</p>
                             <pre>http://192.168.50.100/</pre>
                         </div>
                     </section>
@@ -252,8 +255,13 @@ $ vagrant up</pre>
                                 Spins up the &lt;alias&gt; virtual machine or all machines.
                             </p>
                             <p>
+                                <code>vagrant reload --provision</code><br/>
+                                Reloads (and re-provisions) the VM.
+                            </p>
+                            <p>
                                 <code>vagrant halt &lt;alias&gt;</code><br/>
-                                Shuts down the &lt;alias&gt; virtual machine or all machines.
+                                Shuts down the &lt;alias&gt; virtual machine or all machines.<br/>
+                                <small>(Use this rather than <code>sudo halt</code> from within the VM)</small>
                             </p>
                         </div>
                     </section>
@@ -290,7 +298,7 @@ $ vagrant up</pre>
                 </section>
 
                 <!-- The end -->
-                <section>
+                <section data-background="rgb(0, 168, 128)">
                     <h1>The End</h1>
                     <h3>Any questions?</h3>
                     <p style="color:#000;"><small>(Let me google that for you ...)</small></p>

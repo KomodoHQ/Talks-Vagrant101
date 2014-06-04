@@ -206,10 +206,14 @@ end</pre>
                     <section>
                         <h2>Example provisioning shell script</h2>
                         <div class="common">
-                            <pre># Install some packages
+                            <pre style="font-size:15px;"># Install some packages (includes some mysql-specific hackery)
 # Note that the script runs as root by default
 apt-get update
+debconf-set-selections &lt;&lt;&lt; 'mysql-server-&lt;version&gt; mysql-server/root_password password root'
+debconf-set-selections &lt;&lt;&lt; 'mysql-server-&lt;version&gt; mysql-server/root_password_again password root'
 apt-get install nginx mysql nodejs
+cp -f /vagrant/provisioning/local/my.cnf /etc/mysql/my.cnf
+service mysql restart
 
 <span class="fragment"># Create some logging directories
 mkdir /var/logs/mylogs/error.log
@@ -228,6 +232,7 @@ mysql -uroot -proot mydb &lt; /vagrant/db-schema.sql</span>
 <span class="fragment"># Symlink website docroot to our shared folder
 ln -s /var/www /vagrant/public_html
 </span></pre>
+                            <p><small>A great guide for setting up a secure machine from scratch:<br/><a href="http://plusbryan.com/my-first-5-minutes-on-a-server-or-essential-security-for-linux-servers">http://plusbryan.com/my-first-5-minutes-on-a-server-or-essential-security-for-linux-servers</a></small></p>
                         </div>
                     </section>
                     <section>
@@ -308,6 +313,7 @@ $ vagrant up</pre>
                     <h3>Any questions?</h3>
                     <p><img src="img/question-face.png" /></p>
                     <p style="color:#000;"><small>(Let me google that for you ...)</small></p>
+                    <p><small>Slides available in <code>komodohq/komodo-talks-vagrant101</code> repo.</small></p>
                 </section>
 			</div>
 		</div>

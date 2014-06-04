@@ -5,3 +5,9 @@
 .reveal section > div.common > p {
     margin-bottom: 40px;
 }
+
+.reveal section img {
+    background: none;
+    box-shadow: none;
+    border: none;
+}

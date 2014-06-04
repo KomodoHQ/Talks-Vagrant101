@@ -47,6 +47,7 @@
 				<section>
 					<h1>Vagrant 101</h1>
 					<h3>A very brief introduction</h3>
+                    <img src="img/vagrant.png" />
 				</section>
 
                 <!-- TOC -->
@@ -67,16 +68,16 @@
 					<h2>What is Vagrant?</h2>
                     <div class="common">
                         <p>
-                            Vagrant is a cross-platform (WinNT, OSX, Linux) command line interface (CLI) for creating and managing virtual machines.
+                            Vagrant is a cross-platform (WinNT, OSX, Linux) command line interface (CLI) for creating and managing virtual machine instances.
                         </p>
                         <p class="fragment">
-                            Vagrant can manage VMs locally via VirtualBox or VMWare, or remotely via several "providers" (eg. Rackspace Cloud, AWS).
+                            Vagrant can be used with several VM "providers" which provide the VM infrastructure. VirtualBox is the default provider, but more can be added via the plugin system (e.g. VMWare, AWS, Rackspace Cloud).
                         </p>
 						<p class="fragment">
 							It gives us the vital ability to create and configure virtual machines in a consistent manner.
 						</p>
                         <p class="fragment">
-                            It is perfect for sharing server environments amongst the team, so Joe can be sure he is running the app in exactly the same environment as Felicity.
+                            It is perfect for sharing server environments amongst the team, all packaged neatly in a few text files.
                         </p>
                     </div>
 				</section>
@@ -144,10 +145,10 @@ $ vagrant init</pre>
                     </section>
 
                     <section>
-                        <h2>Things you can configure in <code>VagrantFile</code></h2>
+                        <h2>Some things you can configure in <code>VagrantFile</code></h2>
                         <div class="common">
                             <ul>
-                                <li>The flavour of OS to install (find bare bones boxes at <a href="https://vagrantcloud.com/">vagrantcloud.com/</a> or <a href="http://www.vagrantbox.es/">vagrantbox.es/</a>)</li>
+                                <li>The flavour of OS to install (find bare bones boxes at <a href="https://vagrantcloud.com/">vagrantcloud.com</a> or <a href="http://www.vagrantbox.es/">vagrantbox.es</a>, or package your own)</li>
                                 <li>The IP address of the VM</li>
                                 <li>A shared folder between your host machine and the virtual machine</li>
                                 <li>A provisioning script or manifest files</li>
@@ -168,9 +169,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |c|
     <span class="fragment"># A hostname for this machine
     c.vm.hostname = "my-vagrant-box"</span>
 
-    <span class="fragment"># A local IP
-    # The host machine will be known by 192.168.50.1
-    c.vm.network "private_network", ip: "192.168.50.20"</span>
+    <span class="fragment"># A local IP (use private address space, 192.168.*.*)
+    # The host machine will be on 192.168.50.1
+    c.vm.network "private_network", ip: "192.168.50.100"</span>
 
     <span class="fragment"># Setup shared folder (needed for OSX)
     c.vm.synced_folder "./", "/vagrant", id: "vagrant-root", owner: "vagrant", group: "www-data", mount_options: ["dmode=775", "fmode=664"]</span>
@@ -192,6 +193,9 @@ end</pre>
                             </p>
                             <p class="fragment">
                                 Vagrant supports a few ways to provision machines, such as Ansible, Puppet and Chef (all cross platform) or a simple a shell script.
+                            </p>
+                            <p class="fragment">
+                                Importantly, provisioning is non-interactive - you cannot (and should not) need to interact with the process.
                             </p>
                             <p class="fragment">
                                 Here's an example of the <code>provision.sh</code> shell script that we earlier defined in our example <code>VagrantFile</code> ...
@@ -234,7 +238,7 @@ ln -s /var/www /vagrant/public_html
                             </p>
                             <pre>$ cd /path/to/my/app
 $ vagrant up</pre>
-                            <p><small>(It'll take a few minutes the first time, but thereafter it'll be snappier)</small></p>
+                            <p><small>(It'll take a few minutes the first time whilst the provisioning script is executed, but thereafter it'll be snappier)</small></p>
                             <p>And we can load our app into a browser:</p>
                             <pre>http://192.168.50.100/</pre>
                         </div>
@@ -250,15 +254,15 @@ $ vagrant up</pre>
                                 <code>vagrant init</code><br/>
                                 Creates a new <code>VagrantFile</code> with a few basic settings
                             </p>
-                            <p>
+                            <p class="fragment">
                                 <code>vagrant up &lt;alias&gt;</code><br/>
-                                Spins up the &lt;alias&gt; virtual machine or all machines.
+                                Spins up the &lt;alias&gt; virtual machine or all machines and triggers provisioning if needed.
                             </p>
-                            <p>
+                            <p class="fragment">
                                 <code>vagrant reload --provision</code><br/>
-                                Reloads (and re-provisions) the VM.
+                                Reboots (and re-provisions) the VM.
                             </p>
-                            <p>
+                            <p class="fragment">
                                 <code>vagrant halt &lt;alias&gt;</code><br/>
                                 Shuts down the &lt;alias&gt; virtual machine or all machines.<br/>
                                 <small>(Use this rather than <code>sudo halt</code> from within the VM)</small>
@@ -273,11 +277,11 @@ $ vagrant up</pre>
                                 Shells into the virtual machine<br/>
                                 (or <code>putty -ssh vagrant@ip-address</code> on Windows)
                             </p>
-                            <p>
+                            <p class="fragment">
                                 <code>vagrant destroy &lt;alias&gt;</code><br/>
                                 Destroys the &lt;alias&gt; virtual machine instance or all machines
                             </p>
-                            <p>
+                            <p class="fragment">
                                 <code>vagrant help</code><br/>
                                 List all other commands
                             </p>
@@ -292,6 +296,7 @@ $ vagrant up</pre>
                         <ul>
                             <li class="fragment">Vagrant helps provide consistent development environments across teams.</li>
                             <li class="fragment">Using project-specific VMs helps us accurately mirror the live environment, minimizing WTFs when it comes to deployment.</li>
+                            <li class="fragment">We bundle the <code>VagrantFile</code>, and any accompanying files required for provisioning, with the project repository, so others in the team simply need to run:<pre>$ hg pull -u; vagrant up</pre></li>
                             <li class="fragment">Running tests within the VMs ensures tests are carried out in an identical environment. Again minimizing WTF moments.</li>
                         </ul>
                     </div>
@@ -301,6 +306,7 @@ $ vagrant up</pre>
                 <section data-background="rgb(0, 168, 128)">
                     <h1>The End</h1>
                     <h3>Any questions?</h3>
+                    <p><img src="img/question-face.png" /></p>
                     <p style="color:#000;"><small>(Let me google that for you ...)</small></p>
                 </section>
 			</div>

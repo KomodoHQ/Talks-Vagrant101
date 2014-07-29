@@ -174,7 +174,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |c|
     c.vm.network "private_network", ip: "192.168.50.100"</span>
 
     <span class="fragment"># Setup shared folder (needed for OSX)
-    c.vm.synced_folder "./", "/vagrant", id: "vagrant-root", owner: "vagrant", group: "www-data", mount_options: ["dmode=775", "fmode=664"]</span>
+    c.vm.synced_folder "./",
+		"/vagrant",
+		id: "vagrant-root",
+		owner: "vagrant",
+		group: "www-data",
+		mount_options: ["dmode=775", "fmode=664"]</span>
 
     <span class="fragment"># A provisioning shell script (run once; more on this later)
     c.vm.provision :shell, :path => "provision.sh"</span>
